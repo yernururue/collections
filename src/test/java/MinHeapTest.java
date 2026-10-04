@@ -74,6 +74,28 @@ class MinHeapTest {
         assertEquals(0, heap.getComparisons());
     }
 
+    @Test
+    void matchesPriorityQueueWithInterleavedInsertsAndExtracts() throws Exception {
+        MinHeap heap = new MinHeap();
+        PriorityQueue<Integer> expected = new PriorityQueue<>();
+        Random random = new Random(7);
+
+        for (int i = 0; i < 500; i++) {
+            if (expected.isEmpty() || random.nextBoolean()) {
+                int value = random.nextInt(101) - 50;
+                heap.insert(value);
+                expected.add(value);
+            } else {
+                assertEquals(expected.remove().intValue(), heap.extractMin());
+            }
+            assertEquals(expected.size(), heap.size());
+            if (!expected.isEmpty()) {
+                assertEquals(expected.peek().intValue(), heap.peekMin());
+            }
+            assertHeapProperty(heap);
+        }
+    }
+
     private static void assertHeapProperty(MinHeap heap) throws Exception {
         Field arrayField = MinHeap.class.getDeclaredField("values");
         arrayField.setAccessible(true);

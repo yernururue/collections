@@ -93,4 +93,22 @@ class DynamicArrayTest {
             assertEquals(expected.get(i).intValue(), array.get(i));
         }
     }
+
+    @Test
+    void countsReadsAndShiftsForIndexedChanges() {
+        DynamicArray array = new DynamicArray();
+        array.add(10);
+        array.add(20);
+        array.add(30);
+        array.resetMetrics();
+
+        array.add(1, 15);
+        assertEquals(2, array.getSteps());
+        assertEquals(2, array.getMoves());
+
+        array.resetMetrics();
+        assertEquals(15, array.remove(1));
+        assertEquals(3, array.getSteps());
+        assertEquals(2, array.getMoves());
+    }
 }
